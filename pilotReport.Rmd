@@ -13,13 +13,13 @@ output:
 [PILOT/COPILOT ENTER RELEVANT REPORT DETAILS HERE]
 
 ```{r}
-articleID <- 211_5_2015 # insert the article ID code here e.g., "10-3-2015_PS"
-reportType <- "pilot" # specify whether this is the 'pilot' report or 'final' report
-pilotNames <- "Alex Carstensen" # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+articleID <- '211_5_2015' # insert the article ID code here e.g., "10-3-2015_PS"
+reportType <- 'pilot' # specify whether this is the 'pilot' report or 'final' report
+pilotNames <- 'Alex Carstensen' # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
 copilotNames <- NA # # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
 pilotTTC <- NA # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
 copilotTTC <- NA # insert the co-pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
-pilotStartDate <- "10/19/18" # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+pilotStartDate <- '10/19/18' # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 copilotStartDate <- NA # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 completionDate <- NA # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 ```
@@ -30,7 +30,7 @@ completionDate <- NA # copilot insert the date of final report completion (after
 
 [PILOT/COPILOT write a brief summary of the methods underlying the target outcomes written in your own words]
 
-Participants judged the grammaticality of word pairs composed of to/the followed by an unambiguous noun or verb, e.g. "to eat" (grammatical) vs. "the add" (ungrammatical); responses were 2AFC so chance accuracy would be 50%. The first word (to/the) was presented at the center of the screen and the second (a noun or verb) was presented in the left or right visual field. Behavioral analyses assessed accuracy of the grammaticality judgment by visual field of presentation, and by familial sinistrality (FS- meaning the participant did not report having left-handed blood relatives, and FS+ meaning they did). An ANOVA assessed affects of 3 IVs (visual field, familial sinistrality, and grammaticality) on the DV, grammaticality judgement.
+Participants judged the grammaticality of word pairs composed of to/the followed by an unambiguous noun or verb, e.g. "to eat" (grammatical) vs. "the add" (ungrammatical); responses were 2AFC so chance accuracy would be 50%. The first word (to/the) was presented at the center of the screen and the second (a noun or verb) was presented in the left or right visual field. Any trials with horizontal eye movements or blink artifacts in EEG were excluded from analysis (presumably before computing the accuracy means that appear in the behavioral data file). Behavioral analyses assessed accuracy of the grammaticality judgment by visual field of presentation, and by familial sinistrality (FS- meaning the participant did not report having left-handed blood relatives, and FS+ meaning they did). An ANOVA assessed affects of 3 IVs (visual field, familial sinistrality, and grammaticality) on the DV, grammaticality judgement.
 
 ------
 
@@ -60,6 +60,7 @@ library(knitr) # for kable table formating
 library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
 library(readxl) # import excel files
 library(CARPSreports) # custom report functions
+library(ez) # for the ANOVA
 ```
 
 [PILOT/COPILOT DO NOT MAKE CHANGES TO THE CODE CHUNK BELOW]
@@ -72,11 +73,15 @@ reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = 
 # Step 2: Load data
 
 ```{r}
+# Read in BehavioralData_OSF.csv as d
+d <- read_csv('./data/BehavioralData_OSF.csv') 
 ```
 
 # Step 3: Tidy data
 
 ```{r}
+# It's already tidy!
+
 ```
 
 # Step 4: Run analysis
@@ -86,16 +91,40 @@ reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = 
 [you can remove this section if no pre-processing is required]
 
 ```{r}
+# It's already pre-processed!
 ```
 
 ## Descriptive statistics
 
 ```{r}
+# Check accuracy by visual field: "For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%)."
+
+visualField = aggregate(Accuracy~VisualField, data=d, mean)
+
+# Repro checks
+reproCheck(reportedValue = '.81', obtainedValue = subset(visualField, VisualField=="RVF")$Accuracy, valueType = 'mean', eyeballCheck = NA)
+reproCheck(reportedValue = '.75', obtainedValue = subset(visualField, VisualField=="LVF")$Accuracy, valueType = 'mean', eyeballCheck = NA)
+
+# Check accuracy by visual field and familial sinistrality group: "for FS– participants, RVF accuracy was 80% and LVF accuracy was 73%; for FS+ participants, RVF accuracy was 82% and LVF accuracy was 77%."
+
+visualFieldxFS = aggregate(Accuracy~VisualField + group, data=d, mean)
+
+# Repro checks
+reproCheck(reportedValue = '.80', obtainedValue = subset(visualFieldxFS, VisualField=="RVF" & group=="FS-")$Accuracy, valueType = 'mean', eyeballCheck = NA)
+reproCheck(reportedValue = '.73', obtainedValue = subset(visualFieldxFS, VisualField=="LVF" & group=="FS-")$Accuracy, valueType = 'mean', eyeballCheck = NA)
+reproCheck(reportedValue = '.82', obtainedValue = subset(visualFieldxFS, VisualField=="RVF" & group=="FS+")$Accuracy, valueType = 'mean', eyeballCheck = NA)
+reproCheck(reportedValue = '.77', obtainedValue = subset(visualFieldxFS, VisualField=="LVF" & group=="FS+")$Accuracy, valueType = 'mean', eyeballCheck = NA)
 ```
 
 ## Inferential statistics
 
 ```{r}
+# Check ANOVA: "Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of visual field, F (1, 62) = 37.39, p < .001, and grammaticality, F (1, 62) = 18.51, p < .001, but no effect of familial sinistrality (p = .3). There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3)."
+
+gramAcc = ezANOVA(data = d, dv = .(Accuracy), wid = .(Subject), within = .(VisualField,Grammaticality), between = .(group))
+print(gramAcc)
+
+
 ```
 
 # Step 5: Conclusion
