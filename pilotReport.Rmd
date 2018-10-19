@@ -30,13 +30,15 @@ completionDate <- NA # copilot insert the date of final report completion (after
 
 [PILOT/COPILOT write a brief summary of the methods underlying the target outcomes written in your own words]
 
-
+Participants judged the grammaticality of word pairs composed of to/the followed by an unambiguous noun or verb, e.g. "to eat" (grammatical) vs. "the add" (ungrammatical); responses were 2AFC so chance accuracy would be 50%. The first word (to/the) was presented at the center of the screen and the second (a noun or verb) was presented in the left or right visual field. Behavioral analyses assessed accuracy of the grammaticality judgment by visual field of presentation, and by familial sinistrality (FS- meaning the participant did not report having left-handed blood relatives, and FS+ meaning they did). An ANOVA assessed affects of 3 IVs (visual field, familial sinistrality, and grammaticality) on the DV, grammaticality judgement.
 
 ------
 
 #### Target outcomes: 
 
 [PILOT copy and paste the target outcomes identified in targetOutcomes.md]  
+
+Behavioral data. For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%). The same pattern held regardless of familial sinistrality: for FS– participants, RVF accuracy was 80% and LVF accuracy was 73%; for FS+ participants, RVF accuracy was 82% and LVF accuracy was 77%. Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of visual field, F (1, 62) = 37.39, p < .001, and grammaticality, F (1, 62) = 18.51, p < .001, but no effect of familial sinistrality (p = .3). There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
 
 ------
 
